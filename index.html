@@ -62,9 +62,7 @@
   <script type="module">
     import {
       init,
-      run_main,
-      TopLevel_async_handler,
-      shell
+      run_main
     } from "https://pygame-web.github.io/archives/0.9/pythons.js";
 
     document.getElementById("status").addEventListener("click", async () => {
@@ -77,15 +75,12 @@
 
         document.getElementById("status").style.display = "none";
 
-        const appdir = "/data/data/spiderboy-turtle-rescue";
-        const loaderHome = `${appdir}/assets`;
-        const mainScript = `${loaderHome}/main.py`;
-
-        await run_main(platform.PyConfig, { loaderhome: loaderHome });
-        await TopLevel_async_handler.start_toplevel(shell, false);
-        await shell.runpy(mainScript);
+        // This runs the default script in your APK
+        await run_main(platform.PyConfig, {
+          apk: "spiderboy-turtle-rescue.apk"
+        });
       } catch (error) {
-        alert("Oops! Something went wrong.");
+        alert("Something went wrong while launching SpiderBoy.");
         console.error(error);
       }
     });
