@@ -63,38 +63,31 @@
     import {
       init,
       run_main,
-      MM,
       TopLevel_async_handler,
       shell
     } from "https://pygame-web.github.io/archives/0.9/pythons.js";
 
     document.getElementById("status").addEventListener("click", async () => {
-      const platform = await init({
-        python: "python3.12",
-        os: "vtx,fs,snd,gui",
-        console: false
-      });
+      try {
+        const platform = await init({
+          python: "python3.12",
+          os: "vtx,fs,snd,gui",
+          console: false
+        });
 
-      const appdir = "/data/data/spiderboy-turtle-rescue";
-      const apk = "spiderboy-turtle-rescue.apk";
+        document.getElementById("status").style.display = "none";
 
-      const cfg = {
-        io: "url",
-        type: "mount",
-        mount: { point: appdir, path: "/" },
-        path: `/ => ${appdir}`
-      };
+        const appdir = "/data/data/spiderboy-turtle-rescue";
+        const loaderHome = `${appdir}/assets`;
+        const mainScript = `${loaderHome}/main.py`;
 
-      const track = MM.prepare(apk, JSON.stringify(cfg));
-      while (!track.ready) await new Promise(r => setTimeout(r, 100));
-
-      document.getElementById("status").style.display = "none";
-
-      await run_main(platform.PyConfig, { loaderhome: `${appdir}/assets` });
-
-      const main = `${appdir}/assets/main.py`;
-      await TopLevel_async_handler.start_toplevel(shell, false);
-      await shell.runpy(main);
+        await run_main(platform.PyConfig, { loaderhome: loaderHome });
+        await TopLevel_async_handler.start_toplevel(shell, false);
+        await shell.runpy(mainScript);
+      } catch (error) {
+        alert("Oops! Something went wrong.");
+        console.error(error);
+      }
     });
   </script>
 </body>
