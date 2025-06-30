@@ -20,7 +20,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background: #e74c3c;
-      padding: 20px 40px; /* Adjusted padding */
+      padding: 20px 40px;
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       font-size: 1.5em;
@@ -28,8 +28,8 @@
       transition: background 0.3s ease;
       z-index: 9999;
       color: white;
-      min-width: 250px; /* Added minimum width */
-      text-align: center; /* Centered text */
+      min-width: 250px;
+      text-align: center;
     }
 
     #status:hover {
@@ -46,7 +46,6 @@
       z-index: 1;
     }
 
-    /* Additional CSS to hide potential console elements */
     #console,
     .console-output {
       display: none !important;
@@ -58,13 +57,31 @@
 <body>
   <div id="status">🕷 Click to Start SpiderBoy!</div>
   <canvas class="emscripten" id="canvas" tabindex="1"></canvas>
+
   <script src="https://pygame-web.github.io/archives/0.9/browserfs.min.js"></script>
   <script src="https://pygame-web.github.io/archives/0.9/pythons.js"
-    type="module" async defer id="site"
+    type="module"
+    id="site"
     data-LINES="0"
     data-CONSOLE="0"
     data-python="python3.12"
-    data-os="vtx,fs,snd,gui">
-#</script>
+    data-os="vtx,fs,snd,gui"
+    data-apk="spiderboy-turtle-rescue.apk"
+    data-path="main.py">
+  </script>
+
+  <script>
+    document.getElementById("status").addEventListener("click", function () {
+      document.getElementById("status").style.display = "none";
+      const script = document.getElementById("site");
+      if (script && script.hasAttribute("data-apk")) {
+        const newScript = document.createElement("script");
+        newScript.src = script.src;
+        newScript.type = script.type;
+        [...script.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        document.body.appendChild(newScript);
+      }
+    });
+  </script>
 </body>
 </html>
