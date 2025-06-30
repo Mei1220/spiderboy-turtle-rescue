@@ -58,7 +58,7 @@
   <div id="status">🕷 Click to Start SpiderBoy!</div>
   <canvas class="emscripten" id="canvas" tabindex="1"></canvas>
 
-  <!-- Load supporting libraries -->
+  <!-- Load Python + BrowserFS + Runtime -->
   <script src="https://pygame-web.github.io/archives/0.9/browserfs.min.js"></script>
   <script src="https://pygame-web.github.io/archives/0.9/pythons.js"></script>
 
@@ -73,8 +73,15 @@
 
         document.getElementById("status").style.display = "none";
 
+        const appdir = "/data/data/spiderboy-turtle-rescue";
+
+        // Mount your APK (ZIP) into the virtual FS
+        await platform.mount.apk("spiderboy-turtle-rescue.apk", appdir);
+
+        // Launch Python interpreter
         await window.pythons.run_main(platform.PyConfig, {
-          apk: "spiderboy-turtle-rescue.apk"
+          loaderhome: `${appdir}/assets`,
+          main: `${appdir}/assets/main.py`
         });
       } catch (err) {
         alert("SpiderBoy failed to launch.");
