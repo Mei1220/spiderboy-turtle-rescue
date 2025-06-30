@@ -59,28 +59,20 @@
   <canvas class="emscripten" id="canvas" tabindex="1"></canvas>
 
   <script src="https://pygame-web.github.io/archives/0.9/browserfs.min.js"></script>
-  <script src="https://pygame-web.github.io/archives/0.9/pythons.js"
-    type="module"
-    id="site"
-    data-LINES="0"
-    data-CONSOLE="0"
-    data-python="python3.12"
-    data-os="vtx,fs,snd,gui"
-    data-apk="spiderboy-turtle-rescue.apk"
-    data-path="main.py">
-  </script>
-
-  <script>
-    document.getElementById("status").addEventListener("click", function () {
+  <script id="loaderScript" type="module">
+    document.getElementById("status").addEventListener("click", () => {
       document.getElementById("status").style.display = "none";
-      const script = document.getElementById("site");
-      if (script && script.hasAttribute("data-apk")) {
-        const newScript = document.createElement("script");
-        newScript.src = script.src;
-        newScript.type = script.type;
-        [...script.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
-        document.body.appendChild(newScript);
-      }
+
+      const script = document.createElement("script");
+      script.src = "https://pygame-web.github.io/archives/0.9/pythons.js";
+      script.type = "module";
+      script.setAttribute("data-LINES", "0");
+      script.setAttribute("data-CONSOLE", "0");
+      script.setAttribute("data-python", "python3.12");
+      script.setAttribute("data-os", "vtx,fs,snd,gui");
+      script.setAttribute("data-apk", "spiderboy-turtle-rescue.apk");
+      script.setAttribute("data-path", "main.py");
+      document.body.appendChild(script);
     });
   </script>
 </body>
