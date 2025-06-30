@@ -58,16 +58,14 @@
   <div id="status">🕷 Click to Start SpiderBoy!</div>
   <canvas class="emscripten" id="canvas" tabindex="1"></canvas>
 
+  <!-- Load supporting libraries -->
   <script src="https://pygame-web.github.io/archives/0.9/browserfs.min.js"></script>
-  <script type="module">
-    import {
-      init,
-      run_main
-    } from "https://pygame-web.github.io/archives/0.9/pythons.js";
+  <script src="https://pygame-web.github.io/archives/0.9/pythons.js"></script>
 
+  <script>
     document.getElementById("status").addEventListener("click", async () => {
       try {
-        const platform = await init({
+        const platform = await window.pythons.init({
           python: "python3.12",
           os: "vtx,fs,snd,gui",
           console: false
@@ -75,13 +73,12 @@
 
         document.getElementById("status").style.display = "none";
 
-        // This runs the default script in your APK
-        await run_main(platform.PyConfig, {
+        await window.pythons.run_main(platform.PyConfig, {
           apk: "spiderboy-turtle-rescue.apk"
         });
-      } catch (error) {
-        alert("Something went wrong while launching SpiderBoy.");
-        console.error(error);
+      } catch (err) {
+        alert("SpiderBoy failed to launch.");
+        console.error(err);
       }
     });
   </script>
