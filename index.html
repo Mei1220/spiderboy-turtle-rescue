@@ -61,7 +61,7 @@
   <script type="module">
     import init, { run_main, MM, TopLevel_async_handler, shell } from "https://pygame-web.github.io/archives/0.9/pythons.js";
 
-    async function startSpiderBoy() {
+    async function startGame() {
       const platform = await init({
         python: "python3.12",
         os: "vtx,fs,snd,gui",
@@ -79,9 +79,10 @@
       };
 
       const track = MM.prepare(apk, JSON.stringify(cfg));
-      while (!track.ready) await new Promise(res => setTimeout(res, 100));
+      while (!track.ready) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
 
-      platform.document.querySelector("#status").style.display = "none";
       await run_main(platform.PyConfig, { loaderhome: `${appdir}/assets` });
 
       const main = `${appdir}/assets/main.py`;
@@ -90,7 +91,8 @@
     }
 
     document.getElementById("status").addEventListener("click", () => {
-      startSpiderBoy();
+      document.getElementById("status").style.display = "none";
+      startGame();
     });
   </script>
 </body>
