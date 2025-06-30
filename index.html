@@ -65,15 +65,44 @@
 
       const script = document.createElement("script");
       script.src = "https://pygame-web.github.io/archives/0.9/pythons.js";
-      script.type = "module";
-      script.setAttribute("data-LINES", "0");
-      script.setAttribute("data-CONSOLE", "0");
-      script.setAttribute("data-python", "python3.12");
-      script.setAttribute("data-os", "vtx,fs,snd,gui");
-      script.setAttribute("data-apk", "spiderboy-turtle-rescue.apk");
-      script.setAttribute("data-path", "main.py");
-      document.body.appendChild(script);
+<script type="module">
+  import init, { run_main, MM, TopLevel_async_handler, shell } from "https://pygame-web.github.io/archives/0.9/pythons.js";
+
+  async function custom_site() {
+    const platform = await init({
+      python: "python3.12",
+      os: "vtx,fs,snd,gui",
+      console: false,
     });
-  </script>
+
+    const appdir = "/data/data/spiderboy-turtle-rescue";
+    const apk = "spiderboy-turtle-rescue.apk";
+
+    const cfg = {
+      io: "url",
+      type: "mount",
+      mount: { point: appdir, path: "/" },
+      path: `/ => ${appdir}`,
+    };
+
+    const track = MM.prepare(apk, JSON.stringify(cfg));
+    while (!track.ready) await new Promise(res => setTimeout(res, 100));
+
+    platform.document.querySelector("#status").style.display = "none";
+    await run_main(platform.PyConfig, { loaderhome: `${appdir}/assets` });
+
+    const main = `${appdir}/assets/main.py`;
+    await TopLevel_async_handler.start_toplevel(shell, false);
+    await shell.runpy(main);
+  }
+
+  window.startSpiderBoy = custom_site; // Expose globally
+</script>
+
+<script>
+  document.getElementById("status").addEventListener("click", () => {
+    window.startSpiderBoy();
+  });
+</script>
 </body>
 </html>
