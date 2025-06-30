@@ -60,7 +60,13 @@
 
   <script src="https://pygame-web.github.io/archives/0.9/browserfs.min.js"></script>
   <script type="module">
-    import init from "https://pygame-web.github.io/archives/0.9/pythons.js";
+    import {
+      init,
+      run_main,
+      MM,
+      TopLevel_async_handler,
+      shell
+    } from "https://pygame-web.github.io/archives/0.9/pythons.js";
 
     document.getElementById("status").addEventListener("click", async () => {
       const platform = await init({
@@ -79,16 +85,16 @@
         path: `/ => ${appdir}`
       };
 
-      const track = platform.MM.prepare(apk, JSON.stringify(cfg));
+      const track = MM.prepare(apk, JSON.stringify(cfg));
       while (!track.ready) await new Promise(r => setTimeout(r, 100));
 
-      platform.document.querySelector("#status").style.display = "none";
+      document.getElementById("status").style.display = "none";
 
-      await platform.run_main(platform.PyConfig, { loaderhome: `${appdir}/assets` });
+      await run_main(platform.PyConfig, { loaderhome: `${appdir}/assets` });
 
       const main = `${appdir}/assets/main.py`;
-      await platform.TopLevel_async_handler.start_toplevel(platform.shell, false);
-      await platform.shell.runpy(main);
+      await TopLevel_async_handler.start_toplevel(shell, false);
+      await shell.runpy(main);
     });
   </script>
 </body>
